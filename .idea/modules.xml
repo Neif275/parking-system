@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/parking-system.iml" filepath="$PROJECT_DIR$/.idea/parking-system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parking-system-main/ms-vehicle-main/user.iml" filepath="$PROJECT_DIR$/parking-system-main/ms-vehicle-main/user.iml" />
+    </modules>
+  </component>
+</project>
