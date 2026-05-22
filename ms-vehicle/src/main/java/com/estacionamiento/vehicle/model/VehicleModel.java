@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "vehicle")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -19,12 +20,12 @@ public class VehicleModel {
 
     @ManyToOne
     @JoinColumn(name = "model_id", nullable = false)
-    private ModelModel model;;
+    private ModelModel model;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private VehicleCategoryModel category;
 
-    @Column(name = "ownerUserId")
+    @Column(name = "owner_user_id")
     private Long ownerUserId;
 }
