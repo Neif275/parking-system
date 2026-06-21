@@ -9,7 +9,7 @@ create table tariff (
 
 insert into tariff (name, description, price_per_minute, vehicle_type) values
     ('Tarifa Auto Estándar',      'Tarifa por minuto para autos',      37.00, 'AUTO'),
-    ('Tarifa Moto Estándar',      'Tarifa por minuto para motos',      30.00, 'MOTO'),
+    ('Tarifa Moto Estándar',      'Tarifa por minuto para motos',      37.00, 'MOTO'),
     ('Tarifa Camioneta Estándar', 'Tarifa por minuto para camionetas', 37.00, 'CAMIONETA'),
     ('Tarifa Auto Nocturna',      'Tarifa nocturna para autos',        50.00, 'AUTO'),
     ('Tarifa Moto Nocturna',      'Tarifa nocturna para motos',        40.00, 'MOTO'),

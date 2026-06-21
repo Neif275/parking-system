@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: ms-auth
+            uri: lb://auth
+            predicates:
+              - Path=/auth/**
+          - id: ms-admin
+            uri: lb://auth
+            predicates:
+              - Path=/admin/**
+          - id: ms-user
+            uri: lb://user
+            predicates:
+              - Path=/api/v1/users/**
+          - id: ms-vehicle
+            uri: lb://vehicle
+            predicates:
+              - Path=/api/v1/vehicles/**
+          - id: ms-parking-floors
+            uri: lb://parking
+            predicates:
+              - Path=/api/v1/floors/**
+          - id: ms-parking-zones
+            uri: lb://parking
+            predicates:
+              - Path=/api/v1/zones/**
+          - id: ms-parking-slots
+            uri: lb://parking
+            predicates:
+              - Path=/api/v1/slots/**
+          - id: ms-parking-slot-types
+            uri: lb://parking
+            predicates:
+              - Path=/api/v1/slot-types/**
+          - id: ms-tariff
+            uri: lb://tariff
+            predicates:
+              - Path=/api/v1/tariffs/**
+          - id: ms-entry-exit
+            uri: lb://entry-exit
+            predicates:
+              - Path=/api/v1/entry-exit/**
+          - id: ms-payment
+            uri: lb://payment
+            predicates:
+              - Path=/api/v1/payments/**
+          - id: ms-reservation
+            uri: lb://reservation
+            predicates:
+              - Path=/api/v1/reservations/**
+          - id: ms-notification
+            uri: lb://notification
+            predicates:
+              - Path=/api/v1/notifications/**
+          - id: ms-report
+            uri: lb://report
+            predicates:
+              - Path=/api/v1/reports/**
+
+server:
+  port: 9091
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9090/eureka/
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
