@@ -1,0 +1,208 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - parking-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-padmin123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ms-eureka-server:
+    build: ./ms-eureka-server
+    container_name: ms-eureka-server
+    ports:
+      - "9090:9090"
+    networks:
+      - parking-network
+
+  ms-auth:
+    build: ./ms-auth
+    container_name: ms-auth
+    ports:
+      - "9080:9080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-user:
+    build: ./ms-user
+    container_name: ms-user
+    ports:
+      - "9081:9081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/users_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-vehicle:
+    build: ./ms-vehicle
+    container_name: ms-vehicle
+    ports:
+      - "9082:9082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/vehicle_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-parking:
+    build: ./ms-parking
+    container_name: ms-parking
+    ports:
+      - "9083:9083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/parking_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-tariff:
+    build: ./ms-tariff
+    container_name: ms-tariff
+    ports:
+      - "9084:9084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tariff_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-entry-exit:
+    build: ./ms-entry-exit
+    container_name: ms-entry-exit
+    ports:
+      - "9085:9085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/entryexit_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-payment:
+    build: ./ms-payment
+    container_name: ms-payment
+    ports:
+      - "9086:9086"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/payment_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-reservation:
+    build: ./ms-reservation
+    container_name: ms-reservation
+    ports:
+      - "9087:9087"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/reservation_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-notification:
+    build: ./ms-notification
+    container_name: ms-notification
+    ports:
+      - "9088:9088"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/notification_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-report:
+    build: ./ms-report
+    container_name: ms-report
+    ports:
+      - "9089:9089"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/report_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+  ms-gateway:
+    build: ./ms-gateway
+    container_name: ms-gateway
+    ports:
+      - "9091:9091"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-eureka-server:9090/eureka/
+    depends_on:
+      ms-eureka-server:
+        condition: service_started
+    networks:
+      - parking-network
+
+networks:
+  parking-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
