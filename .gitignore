@@ -1,0 +1,16 @@
+# Archivos compilados
+target/
+*.class
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+# Logs
+*.log
