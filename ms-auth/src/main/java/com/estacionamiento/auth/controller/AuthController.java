@@ -2,6 +2,9 @@ package com.estacionamiento.auth.controller;
 
 import com.estacionamiento.auth.dto.LoginRequestDTO;
 import com.estacionamiento.auth.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "Autenticación", description = "Endpoints de autenticación de usuarios")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -29,6 +33,9 @@ public class AuthController {
         this.userDetailsService = userDetailsService;
     }
 
+    @Operation(summary = "Autentica usuario y genera token JWT")
+    @ApiResponse(responseCode = "200", description = "Autenticación exitosa, token generado")
+    @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequestDTO requestDTO) {
         try {
