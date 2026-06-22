@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ms-report
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  jackson:
+    default-property-inclusion: non_null
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html

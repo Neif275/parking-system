@@ -6,69 +6,61 @@ spring:
       mvc:
         routes:
           - id: ms-auth
-            uri: lb://auth
+            uri: lb://ms-auth
             predicates:
-              - Path=/auth/**
+              - Path=/api/v1/auth/**
           - id: ms-admin
-            uri: lb://auth
+            uri: lb://ms-auth
             predicates:
-              - Path=/admin/**
+              - Path=/api/v1/admin/**
           - id: ms-user
-            uri: lb://user
+            uri: lb://ms-user
             predicates:
               - Path=/api/v1/users/**
           - id: ms-vehicle
-            uri: lb://vehicle
+            uri: lb://ms-vehicle
             predicates:
               - Path=/api/v1/vehicles/**
           - id: ms-parking-floors
-            uri: lb://parking
+            uri: lb://ms-parking
             predicates:
               - Path=/api/v1/floors/**
           - id: ms-parking-zones
-            uri: lb://parking
+            uri: lb://ms-parking
             predicates:
               - Path=/api/v1/zones/**
           - id: ms-parking-slots
-            uri: lb://parking
+            uri: lb://ms-parking
             predicates:
-              - Path=/api/v1/slots/**
+              - Path=/api/v1/parking-slots/**
           - id: ms-parking-slot-types
-            uri: lb://parking
+            uri: lb://ms-parking
             predicates:
               - Path=/api/v1/slot-types/**
           - id: ms-tariff
-            uri: lb://tariff
+            uri: lb://ms-tariff
             predicates:
               - Path=/api/v1/tariffs/**
           - id: ms-entry-exit
-            uri: lb://entry-exit
+            uri: lb://ms-entry-exit
             predicates:
               - Path=/api/v1/entry-exit/**
           - id: ms-payment
-            uri: lb://payment
+            uri: lb://ms-payment
             predicates:
               - Path=/api/v1/payments/**
           - id: ms-reservation
-            uri: lb://reservation
+            uri: lb://ms-reservation
             predicates:
               - Path=/api/v1/reservations/**
           - id: ms-notification
-            uri: lb://notification
+            uri: lb://ms-notification
             predicates:
               - Path=/api/v1/notifications/**
           - id: ms-report
-            uri: lb://report
+            uri: lb://ms-report
             predicates:
               - Path=/api/v1/reports/**
 
 server:
   port: 9091
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:9090/eureka/
-  instance:
-    prefer-ip-address: true
-    hostname: localhost

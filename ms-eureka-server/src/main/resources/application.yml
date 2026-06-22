@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: ms-eureka-server
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+server:
+  port: 9090

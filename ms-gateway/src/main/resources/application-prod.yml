@@ -1,0 +1,6 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://ms-eureka-server:9090/eureka/
+  instance:
+    prefer-ip-address: true
