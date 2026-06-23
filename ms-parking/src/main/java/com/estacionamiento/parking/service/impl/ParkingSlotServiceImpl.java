@@ -14,6 +14,8 @@ import com.estacionamiento.parking.repository.SlotTypeRepository;
 import com.estacionamiento.parking.repository.ZoneRepository;
 import com.estacionamiento.parking.service.ParkingSlotService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ParkingSlotServiceImpl implements ParkingSlotService {
+
+    private static final Logger log = LoggerFactory.getLogger(ParkingSlotServiceImpl.class);
 
     private final ParkingSlotRepository parkingSlotRepository;
     private final ZoneRepository zoneRepository;
@@ -62,26 +66,35 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
 
     @Override
     public List<ParkingSlotResponseDto> findAll() {
+        log.info("Consultando todos los espacios de estacionamiento");
         return parkingSlotRepository.findAll().stream().map(this::toDto).toList();
     }
 
     @Override
     public ParkingSlotResponseDto findById(Long id) {
-        return parkingSlotRepository.findById(id).map(this::toDto).orElse(null);
+        log.info("Buscando espacio de estacionamiento con id: {}", id);
+        ParkingSlotResponseDto result = parkingSlotRepository.findById(id).map(this::toDto).orElse(null);
+        if (result == null) log.warn("Espacio con id {} no encontrado", id);
+        return result;
     }
 
     @Override
     public List<ParkingSlotResponseDto> findAvailable() {
+        log.info("Consultando espacios disponibles");
         return parkingSlotRepository.findByIsAvailableTrue().stream().map(this::toDto).toList();
     }
 
     @Override
     public ParkingSlotResponseDto create(ParkingSlotRequestDto dto) {
-        return toDto(parkingSlotRepository.save(toEntity(dto)));
+        log.info("Creando espacio de estacionamiento numero: {}", dto.getSlotNumber());
+        ParkingSlotResponseDto result = toDto(parkingSlotRepository.save(toEntity(dto)));
+        log.info("Espacio creado con id: {}", result.getId());
+        return result;
     }
 
     @Override
     public ParkingSlotResponseDto update(ParkingSlotRequestDto dto) {
+        log.info("Actualizando espacio de estacionamiento con id: {}", dto.getId());
         return toDto(parkingSlotRepository.save(toEntity(dto)));
     }
 
@@ -89,8 +102,10 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
     public boolean deleteById(Long id) {
         if (parkingSlotRepository.existsById(id)) {
             parkingSlotRepository.deleteById(id);
+            log.info("Espacio con id {} eliminado", id);
             return true;
         }
+        log.warn("No se pudo eliminar: espacio con id {} no existe", id);
         return false;
     }
 }

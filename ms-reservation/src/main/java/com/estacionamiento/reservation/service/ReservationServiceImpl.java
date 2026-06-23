@@ -7,12 +7,16 @@ import com.estacionamiento.reservation.dto.ReservationResponseDto;
 import com.estacionamiento.reservation.model.ReservationModel;
 import com.estacionamiento.reservation.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
+
+    private static final Logger log = LoggerFactory.getLogger(ReservationServiceImpl.class);
 
     private final ReservationRepository reservationRepository;
     private final ParkingSpaceClient parkingSpaceClient;
@@ -43,26 +47,33 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponseDto findById(Long id) {
-        return reservationRepository.findById(id).map(this::toDto).orElse(null);
+        log.info("Buscando reservacion con id: {}", id);
+        ReservationResponseDto result = reservationRepository.findById(id).map(this::toDto).orElse(null);
+        if (result == null) log.warn("Reservacion con id {} no encontrada", id);
+        return result;
     }
 
     @Override
     public List<ReservationResponseDto> findAll() {
+        log.info("Consultando todas las reservaciones");
         return reservationRepository.findAll().stream().map(this::toDto).toList();
     }
 
     @Override
     public List<ReservationResponseDto> findByPlate(String plate) {
+        log.info("Buscando reservaciones por placa: {}", plate);
         return reservationRepository.findByPlate(plate).stream().map(this::toDto).toList();
     }
 
     @Override
     public List<ReservationResponseDto> findByOwnerUserId(Long ownerUserId) {
+        log.info("Buscando reservaciones por usuario id: {}", ownerUserId);
         return reservationRepository.findByOwnerUserId(ownerUserId).stream().map(this::toDto).toList();
     }
 
     @Override
     public List<ReservationResponseDto> findByStatus(String status) {
+        log.info("Buscando reservaciones por estado: {}", status);
         return reservationRepository.findByStatus(status).stream().map(this::toDto).toList();
     }
 
@@ -78,15 +89,20 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponseDto create(ReservationRequestDto dto) {
+        log.info("Creando reservacion para placa: {}, espacio: {}", dto.getPlate(), dto.getParkingSpaceId());
         ParkingSpaceResponseDto parkingSpace = parkingSpaceClient.getParkingSpaceById(dto.getParkingSpaceId());
         if (parkingSpace == null || Boolean.FALSE.equals(parkingSpace.getIsAvailable())) {
+            log.error("Espacio {} no disponible para reservacion de placa: {}", dto.getParkingSpaceId(), dto.getPlate());
             throw new IllegalArgumentException("El espacio de estacionamiento no está disponible");
         }
-        return toDto(reservationRepository.save(toEntity(dto)));
+        ReservationResponseDto result = toDto(reservationRepository.save(toEntity(dto)));
+        log.info("Reservacion creada con id: {} para placa: {}", result.getId(), result.getPlate());
+        return result;
     }
 
     @Override
     public ReservationResponseDto update(ReservationRequestDto dto) {
+        log.info("Actualizando reservacion con id: {}", dto.getId());
         return toDto(reservationRepository.save(toEntity(dto)));
     }
 
@@ -94,8 +110,10 @@ public class ReservationServiceImpl implements ReservationService {
     public boolean deleteById(Long id) {
         if (reservationRepository.existsById(id)) {
             reservationRepository.deleteById(id);
+            log.info("Reservacion con id {} eliminada", id);
             return true;
         }
+        log.warn("No se pudo eliminar: reservacion con id {} no existe", id);
         return false;
     }
 }
