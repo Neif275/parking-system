@@ -8,9 +8,5 @@ target/
 *.iws
 *.ipr
 
-# Maven
-.mvn/
-mvnw
-mvnw.cmd
 # Logs
 *.log
