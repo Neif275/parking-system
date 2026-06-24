@@ -8,7 +8,7 @@ eureka:
     prefer-ip-address: true
   client:
     registerWithEureka: false
-    fetchRegistry: false
+    fetchRegistry: true
 
 server:
   port: 9090
