@@ -1,13 +1,14 @@
-package com.estacionamiento.entryexit.controller.handler;
+package com.estacionamiento.vehicle.controller.handler;
 
-import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -20,16 +21,10 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleBusinessValidation(IllegalArgumentException ex) {
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Map<String, String>> handleNotFound(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", ex.getMessage()));
-    }
-
-    @ExceptionHandler(FeignException.class)
-    public ResponseEntity<Map<String, String>> handleRemoteServiceError(FeignException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", "El recurso remoto referenciado no existe o el servicio no está disponible"));
+                .body(Map.of("error", "La marca, modelo o categoría de vehículo indicada no existe"));
     }
 
     @ExceptionHandler(Exception.class)

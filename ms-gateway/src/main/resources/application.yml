@@ -35,7 +35,7 @@ spring:
             - id: ms-parking-slots
               uri: lb://parking
               predicates:
-                - Path=/api/v1/parking-slots/**
+                - Path=/api/v1/slots/**
             - id: ms-parking-slot-types
               uri: lb://parking
               predicates:

@@ -3,12 +3,12 @@ WORKDIR /build
 COPY pom.xml .
 RUN mvn dependency:go-offline -q
 COPY src ./src
-RUN mvn package -DskipTests -q
+RUN mvn clean package -DskipTests -q
 
 # --- # etapa 2
 FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
-COPY --from=builder /build/target/*.jar app.jar
+COPY --from=builder /build/target/app.jar app.jar
 EXPOSE 9081
 ENV SPRING_PROFILES_ACTIVE=prod
 

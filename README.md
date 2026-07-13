@@ -4,6 +4,10 @@
 
 Sistema completo de gestión de estacionamiento desarrollado bajo arquitectura de microservicios. La solución permite administrar vehículos, espacios de estacionamiento, tarifas, entradas y salidas, pagos, reservaciones, notificaciones y reportes de forma distribuida y escalable.
 
+## Estudiante
+
+- Diego Neif Reyes Godoy
+
 ## Dependencias Principales
 
 - Java 25
@@ -50,13 +54,66 @@ Sistema completo de gestión de estacionamiento desarrollado bajo arquitectura d
 - notification_db
 - report_db
 
-## Acceso a Documentación
+## Ejecución Local (Docker)
 
-La documentación de cada microservicio está disponible a través de OpenAPI 3.0 / Swagger en:
+Requisitos previos: Docker Desktop instalado y corriendo.
 
-- http://localhost:PUERTO/swagger-ui/index.html
+1. Clonar el repositorio:
+   ```
+   git clone https://github.com/Neif275/parking-system.git
+   cd parking-system
+   ```
+2. Levantar todo el ecosistema (MySQL, Eureka, los 10 microservicios de negocio y el Gateway):
+   ```
+   docker compose up -d --build
+   ```
+3. Verificar que todos los contenedores estén arriba:
+   ```
+   docker compose ps
+   ```
+4. Acceder a través del API Gateway en `http://localhost:9091` (ver rutas disponibles más abajo), o directamente a cada microservicio en su puerto individual (ver tabla de "Orden de Ejecución de Microservicios").
+5. Para detener el ecosistema:
+   ```
+   docker compose down
+   ```
 
-Donde PUERTO corresponde al puerto de cada microservicio listado anteriormente.
+> Nota: si Docker Desktop se reinicia o se detiene abruptamente mientras el stack está corriendo, los contenedores quedan en estado `Exited` con el mismo nombre. Antes de volver a levantar el stack, correr `docker compose down` (o `docker rm -f $(docker ps -aq)` si el nombre del proyecto cambió) para evitar errores de `container name already in use`.
+
+## Rutas Principales del API Gateway
+
+Todas las rutas se exponen a través de `http://localhost:9091`, enrutando por descubrimiento de servicio vía Eureka:
+
+| Ruta | Microservicio destino |
+|---|---|
+| `/auth/**` | ms-auth |
+| `/admin/**` | ms-auth |
+| `/api/v1/users/**` | ms-user |
+| `/api/v1/vehicles/**` | ms-vehicle |
+| `/api/v1/floors/**` | ms-parking |
+| `/api/v1/zones/**` | ms-parking |
+| `/api/v1/slots/**` | ms-parking |
+| `/api/v1/slot-types/**` | ms-parking |
+| `/api/v1/tariffs/**` | ms-tariff |
+| `/api/v1/entry-exit/**` | ms-entry-exit |
+| `/api/v1/payments/**` | ms-payment |
+| `/api/v1/reservations/**` | ms-reservation |
+| `/api/v1/notifications/**` | ms-notification |
+| `/api/v1/reports/**` | ms-report |
+
+## Acceso a Documentación (Swagger / OpenAPI)
+
+Cada microservicio expone su propia documentación interactiva en `/swagger-ui/index.html`:
+
+- ms-auth: http://localhost:9080/swagger-ui/index.html
+- ms-user: http://localhost:9081/swagger-ui/index.html
+- ms-vehicle: http://localhost:9082/swagger-ui/index.html
+- ms-parking: http://localhost:9083/swagger-ui/index.html
+- ms-tariff: http://localhost:9084/swagger-ui/index.html
+- ms-entry-exit: http://localhost:9085/swagger-ui/index.html
+- ms-payment: http://localhost:9086/swagger-ui/index.html
+- ms-reservation: http://localhost:9087/swagger-ui/index.html
+- ms-notification: http://localhost:9088/swagger-ui/index.html
+- ms-report: http://localhost:9089/swagger-ui/index.html
 
 ## Patrón de Arquitectura
 
